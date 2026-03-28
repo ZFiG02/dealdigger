@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealDigger V18</title>
+
+<style>
+body {
+  font-family: -apple-system, sans-serif;
+  background: #0b132b;
+  color: white;
+  padding: 16px;
+}
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: none;
+}
+button {
+  padding: 14px;
+  width: 100%;
+  border-radius: 12px;
+  background: #3a86ff;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+.card {
+  background: #1c2541;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 12px;
+}
+.score {
+  font-weight: bold;
+  color: #00ffcc;
+}
+</style>
+</head>
+
+<body>
+
+<h2>DealDigger V18 — Intelligence Engine</h2>
+
+<input id="city" placeholder="City" value="Cleveland">
+<input id="zip" placeholder="ZIP" value="44105">
+
+<select id="type">
+  <option>House</option>
+  <option>Land</option>
+</select>
+
+<input id="min" placeholder="Min Price" value="15000">
+<input id="max" placeholder="Max Price" value="70000">
+
+<button onclick="run()">Analyze & Discover</button>
+
+<div id="results"></div>
+
+<script>
+
+function generateQueries(city, zip, type, min, max) {
+  if (type === "Land") {
+    return [
+      `vacant land ${city} ${zip} under ${max}`,
+      `cheap land ${city} motivated seller`,
+      `inherited land ${city} must sell`,
+      `lot for sale ${city} low price`
+    ];
+  } else {
+    return [
+      `investor special ${city} ${zip} under ${max}`,
+      `fixer upper ${city} needs work`,
+      `vacant house ${city} distressed`,
+      `cheap house ${city} under ${max}`,
+      `as-is property ${city} motivated seller`
+    ];
+  }
+}
+
+function scoreQuery(q) {
+  let score = 0;
+
+  if (q.includes("investor")) score += 3;
+  if (q.includes("vacant")) score += 2;
+  if (q.includes("cheap")) score += 2;
+  if (q.includes("fixer")) score += 3;
+  if (q.includes("motivated")) score += 3;
+  if (q.includes("distressed")) score += 3;
+
+  return score;
+}
+
+function run() {
+  const city = document.getElementById("city").value;
+  const zip = document.getElementById("zip").value;
+  const type = document.getElementById("type").value;
+  const min = document.getElementById("min").value;
+  const max = document.getElementById("max").value;
+
+  const queries = generateQueries(city, zip, type, min, max);
+
+  let html = "";
+
+  queries.forEach(q => {
+    const score = scoreQuery(q);
+
+    const url = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+
+    html += `
+      <div class="card">
+        <div class="score">Score: ${score}</div>
+        <div>${q}</div>
+        <a href="${url}" target="_blank" style="color:#3a86ff;">Open Search</a>
+      </div>
+    `;
+  });
+
+  document.getElementById("results").innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
