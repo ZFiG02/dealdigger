@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealDigger V40.6 — Adaptive Investor Factor</title>
+<style>
+:root{--bg:#0f172a;--panel:#1e293b;--panel2:#111827;--text:#f8fafc;--muted:#cbd5e1;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--blue:#38bdf8;--line:#334155}
+*{box-sizing:border-box} body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);padding:16px;max-width:1200px;margin:auto}
+h1,h2,h3{margin:0 0 10px}.small{color:var(--muted);font-size:14px}.card{background:linear-gradient(180deg,var(--panel),var(--panel2));padding:16px;border-radius:14px;margin-top:16px;border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}@media (max-width:900px){.grid,.grid4{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px} input,select,textarea{width:100%;padding:10px;margin:4px 0 8px;border-radius:8px;border:1px solid var(--line);background:#020617;color:var(--text)} textarea{min-height:84px;resize:vertical}
+button{padding:12px 14px;background:var(--good);border:none;border-radius:8px;font-weight:bold;cursor:pointer} button.secondary{background:var(--blue)} button.ghost{background:#475569;color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.kpi{background:#020617;padding:12px;border-radius:10px;border:1px solid var(--line)} .kpi b{display:block;font-size:24px;margin-top:6px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:bold}.good{background:#14532d;color:#bbf7d0}.warn{background:#78350f;color:#fde68a}.bad{background:#7f1d1d;color:#fecaca}
+.listItem{background:#020617;padding:12px;border-radius:10px;border:1px solid var(--line);margin-top:10px}.tableWrap{overflow:auto} table{width:100%;border-collapse:collapse} th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px} th{color:var(--muted)}
+.codeok{color:#86efac}.codebad{color:#fca5a5}
+</style>
+</head>
+<body>
+<h1>DealDigger V40.6 — Adaptive Investor Factor</h1>
+<div class="small">Functional foundation plus adaptive investor factor. This factor is evidence-weighted and transparent. It is not claimed as backtested truth until calibrated on real closed deals.</div>
+<div class="card"><h3>Boot Status</h3><div id="bootStatus" class="small">Booting…</div></div>
+<div class="card">
+  <h3>Deal Finder Engine</h3>
+  <div class="grid">
+    <div><label>Target City</label><input id="finderCity" placeholder="Cleveland"></div>
+    <div><label>Target ZIP / Area</label><input id="finderZip" placeholder="44108"></div>
+    <div><label>Min Price</label><input id="finderMin" type="number" value="0"></div>
+    <div><label>Max Price</label><input id="finderMax" type="number" value="100000"></div>
+    <div><label>Property Type</label><select id="finderType"><option value="house">House</option><option value="multifamily">Multi-family</option><option value="land">Land</option></select></div>
+    <div><label>Search Theme</label><select id="finderTheme"><option value="fixer">Fixer / Distressed</option><option value="land">Cheap Land</option><option value="rental">Low-End Rental</option><option value="multifamily">Small Multi-Family</option></select></div>
+  </div>
+  <div class="row"><button id="generateBtn">Generate URLs</button></div>
+  <div id="finderOutput" class="small">Generate targeted search links.</div>
+</div>
+<div class="card">
+  <h3>Listing Intake Engine</h3>
+  <div class="grid">
+    <div><label>Listing URL</label><input id="listingUrl" placeholder="https://www.zillow.com/..."></div>
+    <div><label>Primary Intake Mode</label><select id="listingMode"><option value="listing">Listing only</option><option value="listing_and_comps">Listing + sold comps</option></select></div>
+    <div style="grid-column:1 / -1"><label>Raw Listing Paste</label><textarea id="listingPaste" placeholder="123 Main St, Cleveland, OH 44108. 3 bed, 1.5 bath, 1456 sqft. Asking $84,900. Vacant. Needs work."></textarea></div>
+    <div style="grid-column:1 / -1"><label>Sold Comp Paste</label><textarea id="compPaste" placeholder="456 Oak St sold $120,000 1,500 sqft 3 bed 1.5 bath 0.4 mi"></textarea></div>
+  </div>
+  <div class="row"><button id="parseBtn">Parse Listing</button><button id="parseAnalyzeBtn" class="secondary">Parse + Analyze</button><button id="parseCompsBtn" class="secondary">Parse Sold Comps</button></div>
+  <div class="small" id="parseStatus">Paste raw listing text to auto-fill the deal form.</div>
+</div>
+<div class="card"><h3>Deal Input</h3>
+  <div class="grid">
+    <div><label>Deal Name / Address</label><input id="dealName"></div>
+    <div><label>Asking Price</label><input id="ask" type="number"></div>
+    <div><label>Square Feet</label><input id="sqft" type="number"></div>
+    <div><label>Beds</label><input id="beds" type="number"></div>
+    <div><label>Baths</label><input id="baths" type="number" step="0.5"></div>
+    <div><label>Manual ARV Override</label><input id="manualArv" type="number"></div>
+    <div><label>Fallback PPSF (blank = auto)</label><input id="fallbackPpsf" type="number" placeholder="auto"></div>
+    <div><label>City</label><input id="city"></div>
+    <div><label>ZIP</label><input id="zip"></div>
+    <div><label>Property Type</label><select id="propertyType"><option value="house">House</option><option value="multifamily">Multi-family</option><option value="land">Land</option></select></div>
+    <div><label>Estimated Rent</label><input id="rent" type="number"></div>
+    <div><label>Strategy Focus</label><select id="strategyFocus"><option value="auto">Auto</option><option value="flip">Flip</option><option value="rental">Rental</option><option value="wholetail">Wholetail</option></select></div>
+    <div><label>Condition</label><select id="condition"><option value="light">Light Rehab</option><option value="moderate">Moderate Rehab</option><option value="heavy">Heavy Rehab</option><option value="gut">Full Gut</option></select></div>
+    <div><label>Occupancy</label><select id="occupancy"><option value="vacant">Vacant</option><option value="occupied">Occupied</option><option value="unknown">Unknown</option></select></div>
+    <div style="grid-column:1 / -1"><label>Notes</label><textarea id="notes"></textarea></div>
+  </div>
+</div>
+<div class="card"><h3>Comps Engine</h3><div class="small">Five comp rows should appear on load.</div><div class="tableWrap"><table><thead><tr><th>Comp</th><th>Sold Price</th><th>Sqft</th><th>Beds</th><th>Baths</th><th>Distance</th></tr></thead><tbody id="compRows"></tbody></table></div></div>
+<div class="card"><div class="row"><button id="analyzeBtn">Analyze Deal</button><button id="clearBtn" class="ghost">Clear</button></div><div id="diag" class="small">Ready.</div></div>
+<div class="card"><h3>Decision</h3><div id="decision">—</div><div class="grid4"><div class="kpi">ARV <b id="arvOut">$—</b></div><div class="kpi">Rehab <b id="rehabOut">$—</b></div><div class="kpi">MAO <b id="maoOut">$—</b></div><div class="kpi">Assignment <b id="assignOut">$—</b></div><div class="kpi">ARV Range <b id="arvRangeOut">$—</b></div><div class="kpi">Rehab Range <b id="rehabRangeOut">$—</b></div><div class="kpi">MAO Range <b id="maoRangeOut">$—</b></div><div class="kpi">Confidence <b id="confidenceOut">—</b></div></div></div>
+<div class="card"><h3>Explainability</h3><div id="explain" class="small">Run analysis.</div></div>
+<div class="card"><h3>Adaptive Investor Factor</h3><div class="grid4">
+<div class="kpi">Investor Factor <b id="investorFactorOut">—</b></div>
+<div class="kpi">Yield Support <b id="yieldSupportOut">—</b></div>
+<div class="kpi">Rehab Burden <b id="rehabBurdenOut">—</b></div>
+<div class="kpi">Risk Tier <b id="riskTierOut">—</b></div>
+</div><div id="factorExplain" class="small">Run analysis.</div></div>
+
+<script>
+const ZIP_MARKETS={"44108":{ppsf:[42,58,74],rent:[850,1100,1325],risk:"High"},"44105":{ppsf:[48,64,82],rent:[950,1200,1450],risk:"High"},"37207":{ppsf:[150,205,255],rent:[1450,1900,2400],risk:"Moderate"},"37918":{ppsf:[105,145,185],rent:[1300,1675,2100],risk:"Moderate"},"48205":{ppsf:[38,54,72],rent:[850,1050,1275],risk:"High"}};
+const STORAGE={};
+function $(id){return document.getElementById(id)}
+function val(id){return parseFloat($(id).value)||0}
+function txt(id){return (($(id)||{}).value||'').trim()}
+function money(n){if(!isFinite(n)) return '$—'; return '$'+Math.round(n).toLocaleString('en-US')}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+window.addEventListener('error', e=>{ $('diag').textContent='JS error: '+e.message; });
+window.addEventListener('unhandledrejection', e=>{ $('diag').textContent='Promise error: '+((e.reason&&e.reason.message)||e.reason||'unknown'); });
+function inferRegion(city){
+  const c=(city||'').toLowerCase();
+  if(c.includes('cleveland')||c.includes('detroit')) return {ppsf:[55,78,105],rent:[950,1250,1600],risk:'Moderate',riskAdj:0.03,liquidity:'Moderate'};
+  if(c.includes('nashville')||c.includes('knoxville')||c.includes('atlanta')) return {ppsf:[125,175,230],rent:[1350,1775,2300],risk:'Lower',riskAdj:0.01,liquidity:'High'};
+  return {ppsf:[80,120,165],rent:[1100,1500,1950],risk:'Moderate',riskAdj:0.02,liquidity:'Moderate'};
+}
+function getZipMarket(zip,city,ptype,beds){
+  const key=(zip||'').trim();
+  let z=ZIP_MARKETS[key]||inferRegion(city);
+  let ppsf=[...z.ppsf];
+  if(ptype==='multifamily') ppsf=ppsf.map(x=>x*0.94);
+  else if(ptype==='land') ppsf=ppsf.map(x=>x*0.40);
+  if(ptype==='house'&&beds>=4) ppsf=ppsf.map(x=>x*1.04);
+  return {
+    ppsf,rent:z.rent,risk:z.risk,
+    riskAdj:(z.riskAdj ?? (z.risk==='High'?0.06:z.risk==='Lower'?0.01:0.03)),
+    liquidity:z.liquidity || (z.risk==='High'?'Moderate':'Moderate'),
+    source:key && ZIP_MARKETS[key]?'ZIP library':'Regional inference'
+  };
+}
+function buildCompRows(){ const tbody=$('compRows'); tbody.innerHTML=''; for(let i=1;i<=5;i++){ const tr=document.createElement('tr'); tr.innerHTML='<td>Comp '+i+'</td><td><input id="compPrice'+i+'" type="number"></td><td><input id="compSqft'+i+'" type="number"></td><td><input id="compBeds'+i+'" type="number"></td><td><input id="compBaths'+i+'" type="number" step="0.5"></td><td><input id="compDist'+i+'" type="number" step="0.1"></td>'; tbody.appendChild(tr);} }
+function generateLinks(){ const city=txt('finderCity')||'Cleveland'; const zip=txt('finderZip'); const loc=(zip?city+' '+zip:city).trim(); const theme=txt('finderTheme'); let phrases=[]; if(theme==='fixer') phrases=['"fixer upper"','"investor special"','"as-is"','"handyman special"','"vacant"']; if(theme==='land') phrases=['"vacant land"','"cheap land"','"buildable lot"','"owner finance land"']; if(theme==='rental') phrases=['"cash flow"','"rental"','"investor special"','"needs work"']; if(theme==='multifamily') phrases=['"duplex"','"triplex"','"fourplex"','"investor special"']; const out=['<div class="small">Buy box: '+loc+'</div>','<div class="listItem"><b>Zillow area entry point</b><br><a target="_blank" href="https://www.zillow.com/homes/'+encodeURIComponent(city.replace(/\s+/g,'-'))+'_rb/">Open Zillow area page</a></div>']; phrases.forEach(p=>{ const q='site:zillow.com '+p+' "'+loc+'"'; out.push('<div class="listItem"><b>'+p+'</b><br><a target="_blank" href="https://www.google.com/search?q='+encodeURIComponent(q)+'">Open Google search</a></div>');}); $('finderOutput').innerHTML=out.join(''); $('diag').textContent='Generated '+phrases.length+' search links.'; }
+function firstMatch(text,regex){ const m=text.match(regex); return m?m[1]:''; }
+function normalizeNum(s){ return s?String(s).replace(/,/g,'').trim():''; }
+function inferRent(city,ptype,beds){ const c=(city||'').toLowerCase(); if(ptype==='house'){ if(c.includes('cleveland')) return beds>=4?1350:1150; if(c.includes('nashville')) return beds>=3?1900:1600; if(c.includes('detroit')) return beds>=3?1300:1100;} if(ptype==='multifamily'){ if(c.includes('cleveland')) return 1800; if(c.includes('nashville')) return 2600; return 2200;} return 0; }
+function parseListingText(raw){
+  const text=raw||'';
+  const low=text.toLowerCase();
+  const price=normalizeNum(firstMatch(text,/\$ ?([\d,]{3,})/i));
+  const sqft=normalizeNum(firstMatch(text,/([\d,]{3,5})\s*(?:sq\s*ft|sqft|sf)/i));
+  const beds=normalizeNum(firstMatch(text,/(\d+(?:\.\d+)?)\s*(?:bed|beds|br)\b/i));
+  const baths=normalizeNum(firstMatch(text,/(\d+(?:\.\d+)?)\s*(?:bath|baths|ba)\b/i));
+  const zip=firstMatch(text,/\b(\d{5})(?:-\d{4})?\b/);
+  const city=(firstMatch(text,/\b([A-Z][a-zA-Z.\- ]+),\s*[A-Z]{2}\s+\d{5}\b/)||'').trim();
+  const address=firstMatch(text,/([\d]{1,6}\s+[A-Za-z0-9.\- ]+(?:St|Street|Ave|Avenue|Rd|Road|Dr|Drive|Ln|Lane|Blvd|Boulevard|Way|Ct|Court|Pl|Place))/i);
+  const hasResidentialLayout = Number(beds||0) > 0 || Number(baths||0) > 0;
+  let ptype='house';
+  if(/\b(?:duplex|triplex|fourplex|multi-family|multifamily)\b/.test(low)) ptype='multifamily';
+  else if(!hasResidentialLayout && /\b(?:vacant land|lot only|buildable lot|raw land|land|acre|acres)\b/.test(low)) ptype='land';
+  let condition='light';
+  if(/gutted|fire|foundation/.test(low)) condition='gut';
+  else if(/mold|water damage|roof|needs work|fixer|rehab/.test(low)) condition='heavy';
+  else if(/dated|cosmetic|tlc|as-is/.test(low)) condition='moderate';
+  let occupancy='vacant';
+  if(/tenant|occupied/.test(low)) occupancy='occupied';
+  else if(/unknown occupancy/.test(low)) occupancy='unknown';
+  const rent=inferRent(city,ptype,Number(beds||0));
+  const z=getZipMarket(zip,city,ptype,Number(beds||0));
+  return {dealName:address||city||'Untitled Intake', ask:price,sqft,beds,baths,city,zip,propertyType:ptype,condition,occupancy,inferredRent:rent,inferredPpsf:Math.round(z.ppsf[1]),notes:text.trim()};
+}
+function parseListingOnly(){ const raw=txt('listingPaste'); if(!raw){ $('parseStatus').textContent='Paste raw listing text first.'; return; } const p=parseListingText(raw); $('dealName').value=p.dealName||''; $('ask').value=p.ask||''; $('sqft').value=p.sqft||''; $('beds').value=p.beds||''; $('baths').value=p.baths||''; $('city').value=p.city||''; $('zip').value=p.zip||''; $('propertyType').value=p.propertyType||'house'; $('condition').value=p.condition||'light'; $('occupancy').value=p.occupancy||'vacant'; if(!txt('rent')&&p.inferredRent) $('rent').value=p.inferredRent; const fp=$('fallbackPpsf'); fp.value=p.inferredPpsf||''; fp.dataset.auto='1'; if(!txt('notes')) $('notes').value=p.notes||''; $('parseStatus').textContent='Parsed listing fields successfully.'; $('diag').textContent='Listing parsed.'; }
+function parseCompLine(line){ const price=normalizeNum(firstMatch(line,/\$ ?([\d,]{3,})/i)); const sqft=normalizeNum(firstMatch(line,/([\d,]{3,5})\s*(?:sq\s*ft|sqft|sf)/i)); const beds=normalizeNum(firstMatch(line,/(\d+(?:\.\d+)?)\s*(?:bed|beds|br)\b/i)); const baths=normalizeNum(firstMatch(line,/(\d+(?:\.\d+)?)\s*(?:bath|baths|ba)\b/i)); const dist=normalizeNum(firstMatch(line,/(\d+(?:\.\d+)?)\s*(?:mi|mile|miles)\b/i)); if(!price||!sqft) return null; return {price,sqft,beds,baths,dist}; }
+function parseCompPaste(){ const lines=txt('compPaste').split('\n').map(s=>s.trim()).filter(Boolean); const comps=lines.map(parseCompLine).filter(Boolean).slice(0,5); comps.forEach((c,idx)=>{ const i=idx+1; $('compPrice'+i).value=c.price||''; $('compSqft'+i).value=c.sqft||''; $('compBeds'+i).value=c.beds||''; $('compBaths'+i).value=c.baths||''; $('compDist'+i).value=c.dist||''; }); $('parseStatus').textContent=comps.length?'Parsed '+comps.length+' sold comps into rows.':'No valid comp lines found.'; }
+function recalcFallbackPpsf(force){ const field=$('fallbackPpsf'); const autoMode=field.dataset.auto==='1'||!field.value; if(!force&&!autoMode) return; const z=getZipMarket(txt('zip'),txt('city'),txt('propertyType'),val('beds')); field.value=String(Math.round(z.ppsf[1])); field.dataset.auto='1'; }
+function bindLivePpsfUpdates(){ ['zip','city','propertyType','beds','baths','sqft','rent'].forEach(id=>{ const el=$(id); el.addEventListener('input',()=>recalcFallbackPpsf(false)); el.addEventListener('change',()=>recalcFallbackPpsf(false)); }); $('fallbackPpsf').addEventListener('input',()=>{ $('fallbackPpsf').dataset.auto=$('fallbackPpsf').value?'0':'1'; }); }
+function resolveArv(){ const sqft=val('sqft'); const manual=val('manualArv'); if(manual>0) return {arv:manual,source:'Manual ARV',confidence:90}; const valid=[]; for(let i=1;i<=5;i++){ const price=val('compPrice'+i), csqft=val('compSqft'+i), dist=val('compDist'+i), beds=val('beds'), baths=val('baths'), cbeds=val('compBeds'+i), cbaths=val('compBaths'+i); if(price>0&&csqft>0){ const ppsf=price/csqft; const sizeMatch=sqft?(csqft>=sqft*0.9&&csqft<=sqft*1.1?1:(csqft>=sqft*0.75&&csqft<=sqft*1.25?0.78:0.45)):1; const bb=(beds&&baths)?((Math.abs(cbeds-beds)+Math.abs(cbaths-baths)<=1)?1:0.8):1; const dw=!dist?1:(dist<=0.5?1:dist<=1?0.93:dist<=2?0.84:dist<=5?0.68:0.45); valid.push({ppsf,fit:sizeMatch*bb*dw}); } } if(valid.length>=3&&sqft>0){ const ws=valid.reduce((a,b)=>a+b.fit,0); const wppsf=valid.reduce((a,b)=>a+b.ppsf*b.fit,0)/(ws||1); return {arv:wppsf*sqft,source:'Weighted comps',confidence:78,weightedPpsf:wppsf,compCount:valid.length}; } const ppsf=val('fallbackPpsf')||getZipMarket(txt('zip'),txt('city'),txt('propertyType'),val('beds')).ppsf[1]; if(sqft>0) return {arv:ppsf*sqft,source:'ZIP/PPSF fallback',confidence:62,weightedPpsf:ppsf,compCount:valid.length}; return {arv:0,source:'None',confidence:0,weightedPpsf:0,compCount:valid.length}; }
+function rehabBreakout(){ const sqft=Math.max(1,val('sqft')); const c=txt('condition'); const notes=(txt('notes')||'').toLowerCase(); let rate=c==='light'?16:c==='moderate'?32:c==='heavy'?56:82; let base=sqft*rate; if(notes.includes('water')) base+=5000; if(notes.includes('mold')) base+=7000; if(notes.includes('roof')) base+=6000; if(notes.includes('foundation')) base+=10000; const low=Math.round(base*0.88), exp=Math.round(base), high=Math.round(base*1.18); return {total:exp,totalLow:low,totalHigh:high}; }
+
+function computeAdaptiveInvestorFactor(arvExp, rehabExp, ask, rent, z, compCount){
+  const strategy = txt('strategyFocus') || 'auto';
+  const rehabRatio = arvExp>0 ? rehabExp/arvExp : 1;
+  const yieldOnArv = (rent>0 && arvExp>0) ? (rent*12)/arvExp : 0;
+  const askDiscount = arvExp>0 ? 1 - (ask/arvExp) : 0;
+
+  let factor = z.risk==='High' ? 0.60 : z.risk==='Lower' ? 0.67 : 0.64;
+  const parts = [];
+
+  parts.push('Risk base ' + factor.toFixed(2) + ' from ' + z.risk + ' risk ZIP.');
+
+  if(yieldOnArv >= 0.20){ factor += 0.08; parts.push('Strong rent support +0.08'); }
+  else if(yieldOnArv >= 0.16){ factor += 0.06; parts.push('Good rent support +0.06'); }
+  else if(yieldOnArv >= 0.13){ factor += 0.04; parts.push('Usable rent support +0.04'); }
+  else if(yieldOnArv >= 0.10){ factor += 0.02; parts.push('Thin rent support +0.02'); }
+  else if(rent>0){ factor -= 0.02; parts.push('Weak rent support -0.02'); }
+
+  if(rehabRatio > 0.50){ factor -= 0.07; parts.push('Very heavy rehab -0.07'); }
+  else if(rehabRatio > 0.35){ factor -= 0.04; parts.push('Heavy rehab -0.04'); }
+  else if(rehabRatio > 0.25){ factor -= 0.02; parts.push('Moderate rehab burden -0.02'); }
+  else if(rehabRatio < 0.15){ factor += 0.02; parts.push('Light rehab burden +0.02'); }
+
+  if(compCount >= 4){ factor += 0.01; parts.push('Comp support +0.01'); }
+  else if(compCount === 0){ factor -= 0.01; parts.push('No comp support -0.01'); }
+
+  if(txt('occupancy') === 'occupied'){ factor -= 0.02; parts.push('Occupied friction -0.02'); }
+  else if(txt('occupancy') === 'unknown'){ factor -= 0.01; parts.push('Unknown occupancy -0.01'); }
+
+  if(askDiscount >= 0.45){ factor += 0.02; parts.push('Deep ask discount +0.02'); }
+  else if(askDiscount <= 0.20 && ask>0){ factor -= 0.02; parts.push('Thin ask discount -0.02'); }
+
+  if(strategy === 'rental' && yieldOnArv >= 0.13){ factor += 0.02; parts.push('Rental focus +0.02'); }
+  if(strategy === 'flip' && rehabRatio > 0.35){ factor -= 0.02; parts.push('Flip focus with heavy rehab -0.02'); }
+  if(strategy === 'wholetail' && rehabRatio < 0.22){ factor += 0.02; parts.push('Wholetail fit +0.02'); }
+
+  const maxFactor = z.risk==='High' ? 0.72 : z.risk==='Lower' ? 0.76 : 0.74;
+  factor = clamp(Math.round(factor*1000)/1000, 0.54, maxFactor);
+
+  return {factor, yieldOnArv, rehabRatio, parts, strategy};
+}
+function analyze(){
+  try{
+    const ask=val('ask');
+    const rent=val('rent');
+    const arvObj=resolveArv();
+    if(arvObj.arv<=0){
+      $('decision').innerHTML='<span class="badge bad">Missing ARV basis</span>';
+      $('diag').textContent='Need manual ARV, comps, or sqft + ZIP.';
+      return;
+    }
+    const rehab=rehabBreakout();
+    const z=getZipMarket(txt('zip'),txt('city'),txt('propertyType'),val('beds'));
+    const arvLow=Math.round(arvObj.arv*0.92), arvExp=Math.round(arvObj.arv), arvHigh=Math.round(arvObj.arv*1.06);
+
+    const factorPack = computeAdaptiveInvestorFactor(arvExp, rehab.total, ask, rent, z, arvObj.compCount||0);
+    const factor = factorPack.factor;
+
+    const maoLow=Math.round(arvLow*factor-rehab.totalHigh), maoExp=Math.round(arvExp*factor-rehab.total), maoHigh=Math.round(arvHigh*factor-rehab.totalLow);
+    const assign=Math.max(0,maoExp-ask);
+    const confidence=clamp(Math.round(arvObj.confidence + (val('sqft')?5:0) + (txt('zip')?5:0) + (ask?5:0) + ((arvObj.compCount||0)>=3?6:0)),25,95);
+
+    let grade='PASS', cls='bad';
+    if(assign>=12000&&confidence>=66){grade='GO';cls='good';}
+    else if(assign>0){grade='INVESTIGATE';cls='warn';}
+
+    $('decision').innerHTML='<span class="badge '+cls+'">'+grade+'</span>';
+    $('arvOut').textContent=money(arvExp);
+    $('rehabOut').textContent=money(rehab.total);
+    $('maoOut').textContent=money(maoExp);
+    $('assignOut').textContent=money(assign);
+    $('arvRangeOut').textContent=money(arvLow)+' / '+money(arvHigh);
+    $('rehabRangeOut').textContent=money(rehab.totalLow)+' / '+money(rehab.totalHigh);
+    $('maoRangeOut').textContent=money(maoLow)+' / '+money(maoHigh);
+    $('confidenceOut').textContent=confidence+'%';
+
+    const yieldPct = factorPack.yieldOnArv>0 ? (factorPack.yieldOnArv*100).toFixed(1)+'%' : 'No rent';
+    const rehabPct = arvExp>0 ? ((rehab.total/arvExp)*100).toFixed(1)+'%' : '—';
+    $('investorFactorOut').textContent = factor.toFixed(3);
+    $('yieldSupportOut').textContent = yieldPct;
+    $('rehabBurdenOut').textContent = rehabPct;
+    $('riskTierOut').textContent = z.risk;
+    $('factorExplain').innerHTML =
+      '<b>Adaptive investor factor:</b> '+factor.toFixed(3)+'<br>' +
+      '<b>Method:</b> evidence-weighted heuristic using ZIP risk, rent support, rehab burden, comp support, occupancy, and ask discount.<br>' +
+      '<b>Important:</b> transparent and testable, but not claimed as backtested truth yet.<br>' +
+      factorPack.parts.map(x=>'• '+x).join('<br>');
+
+    $('explain').innerHTML='<b>ARV source:</b> '+arvObj.source+
+      '<br><b>ZIP source:</b> '+z.source+
+      '<br><b>ZIP PPSF:</b> '+Math.round(z.ppsf[0])+' / '+Math.round(z.ppsf[1])+' / '+Math.round(z.ppsf[2])+
+      '<br><b>Adaptive investor factor:</b> '+factor.toFixed(3)+
+      '<br><b>Comp count:</b> '+(arvObj.compCount||0)+
+      '<br><b>Strategy focus:</b> '+(txt('strategyFocus')||'auto');
+
+    $('diag').textContent='Analyze complete.';
+  }catch(err){
+    $('diag').textContent='Analyze failed: '+err.message;
+    $('decision').innerHTML='<span class="badge bad">Analyze Failed</span>';
+  }
+}
+function clearForm(){ document.querySelectorAll('input, textarea').forEach(el=>{ if(el.type==='file') return; el.value=''; }); document.querySelectorAll('select').forEach(el=>el.selectedIndex=0); buildCompRows(); $('finderOutput').textContent='Generate targeted search links.'; $('parseStatus').textContent='Paste raw listing text to auto-fill the deal form.'; $('decision').textContent='—'; ['arvOut','rehabOut','maoOut','assignOut','arvRangeOut','rehabRangeOut','maoRangeOut','confidenceOut'].forEach(id=>$(id).textContent=id==='confidenceOut'?'—':'$—'); $('investorFactorOut').textContent='—'; $('yieldSupportOut').textContent='—'; $('rehabBurdenOut').textContent='—'; $('riskTierOut').textContent='—'; $('factorExplain').textContent='Run analysis.'; $('explain').textContent='Run analysis.'; $('diag').textContent='Cleared.'; recalcFallbackPpsf(true); }
+function parseListingAndAnalyze(){ parseListingOnly(); if(txt('listingMode')==='listing_and_comps' && txt('compPaste')) parseCompPaste(); analyze(); }
+function boot(){ buildCompRows(); bindLivePpsfUpdates(); recalcFallbackPpsf(true); $('generateBtn').addEventListener('click',generateLinks); $('parseBtn').addEventListener('click',parseListingOnly); $('parseAnalyzeBtn').addEventListener('click',parseListingAndAnalyze); $('parseCompsBtn').addEventListener('click',parseCompPaste); $('analyzeBtn').addEventListener('click',analyze); $('clearBtn').addEventListener('click',clearForm); const rows=document.querySelectorAll('#compRows tr').length; $('bootStatus').innerHTML='<span class="codeok">Boot OK</span> • comp rows: '+rows+' • generator bound • parser bound • analyze bound • adaptive factor ready'; }
+boot();
+</script>
+</body></html>
