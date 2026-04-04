@@ -1794,33 +1794,182 @@ function render(open){
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function exportDealPdf(id){
+function exportDealPdf(id){
   const deal = getSavedDeals().find(d => d.id === id);
   if(!deal) return;
+
   const w = window.open('', '_blank');
   if(!w) return;
 
+  const esc = (s) => String(s ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+
   const clean = (s, fallback='Insufficient Data') => {
-    let t = String(s || '')
+    let t = String(s ?? '')
+      .replace(/<br\s*\/?>/gi,' ')
       .replace(/\s+/g,' ')
       .replace(/([.:!?])([A-Za-z])/g,'$1 $2')
       .trim();
-    return (!t || t==='—' || t==='$—') ? fallback : t;
+    if(!t || t==='—' || t==='$—') return fallback;
+    return t;
   };
 
+  // --- DATA ---
   const decision = clean(deal.outputs.decision, 'No Decision');
   const decisionUpper = decision.toUpperCase();
-  const emoji = decisionUpper.includes('BUY') ? '✅' : decisionUpper.includes('CONDITIONAL') ? '⚖️' : '🚫';
 
-  const verdict = decisionUpper.includes('BUY')
-    ? 'This deal presents a strong acquisition opportunity supported by favorable pricing and strategic alignment.'
-    : decisionUpper.includes('CONDITIONAL')
-    ? 'This deal presents a viable rental opportunity with moderate confidence. While core metrics support acquisition, limited comp data introduces valuation uncertainty. Proceed with disciplined underwriting and a conservative offer strategy.'
-    : 'This deal does not currently meet acquisition criteria and likely requires improved pricing or stronger supporting data.';
+  const icon =
+    decisionUpper.includes('BUY') || decisionUpper==='GO' ? '✅' :
+    decisionUpper.includes('CONDITIONAL') ? '⚖️' : '🚫';
 
-  const summary = 'The subject property presents a moderate-confidence investment opportunity supported by light renovation requirements and favorable acquisition pricing. While comparable sales data is limited, modeled rent bands indicate viable cash-flow potential under conservative underwriting assumptions. The deal aligns more closely with a long-term hold strategy than a retail flip, with margin strength dependent on disciplined acquisition.';
+  const property = clean(deal.inputs.dealName || deal.title, 'Deal Summary');
+  const confidence = clean(deal.outputs.confidence);
+  const strategy = clean(deal.outputs.bestFit);
+  const arv = clean(deal.outputs.arv,'$—');
+  const mao = clean(deal.outputs.mao,'$—');
+  const assign = clean(deal.outputs.assign,'$—');
+  const rehab = clean(deal.outputs.rehab,'$—');
 
-  const htmlDoc = `<!doctype html>
+  const explain = clean(deal.summaries.explainability,'');
+  const summary = clean(deal.summaries.decisionNotes,
+    'This analysis reflects current modeled assumptions and deal inputs.');
+
+  // --- INTELLIGENCE LAYER (THE MAGIC) ---
+  const verdict =
+    decisionUpper.includes('BUY') ? 
+      'This deal meets acquisition criteria under current assumptions and supports immediate pursuit.' :
+    decisionUpper.includes('CONDITIONAL') ?
+      'This deal presents a viable opportunity with moderate risk. Further validation is recommended prior to commitment.' :
+      'This deal does not currently meet acquisition standards and likely requires improved pricing or stronger supporting data.';
+
+  const strength =
+    assign !== '$—' && assign !== '$0'
+      ? 'Strong margin profile exists between entry price and exit assumptions.'
+      : 'At least one viable execution path exists based on current modeling.';
+
+  const risk =
+    explain.toLowerCase().includes('comp') && explain.toLowerCase().includes('0')
+      ? 'Valuation confidence is limited due to absence of comparable sales data.'
+      : 'Outcome remains sensitive to rehab assumptions and local market validation.';
+
+  const logicLines = explain
+    ? explain.split(/(?<=\.)\s+/).filter(Boolean)
+    : ['Analysis inputs were limited.'];
+
+  // --- PDF ---
+  const html = `
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${esc(property)} - DealDigger</title>
+
+<style>
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  color:#111;
+  padding:32px;
+}
+
+h1{
+  font-size:28px;
+  font-weight:900;
+  margin:0;
+}
+
+h2{
+  font-size:18px;
+  margin-top:24px;
+  margin-bottom:8px;
+}
+
+.section{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
+}
+
+.metric{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+}
+
+.label{
+  color:#666;
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+.value{
+  font-weight:800;
+}
+
+.decision{
+  font-size:20px;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<h1>DealDigger</h1>
+
+<p><strong>Property:</strong> ${esc(property)}</p>
+
+<hr>
+
+<h2>Decision</h2>
+<div class="decision">${icon} ${esc(decision)}</div>
+
+<div class="section">
+<p>${esc(verdict)}</p>
+<p><strong>Strength:</strong> ${esc(strength)}</p>
+<p><strong>Risk:</strong> ${esc(risk)}</p>
+</div>
+
+<h2>Core Metrics</h2>
+<div class="section">
+<div class="metric"><span class="label">ARV</span><span class="value">${esc(arv)}</span></div>
+<div class="metric"><span class="label">MAO</span><span class="value">${esc(mao)}</span></div>
+<div class="metric"><span class="label">Margin</span><span class="value">${esc(assign)}</span></div>
+<div class="metric"><span class="label">Rehab</span><span class="value">${esc(rehab)}</span></div>
+<div class="metric"><span class="label">Strategy</span><span class="value">${esc(strategy)}</span></div>
+<div class="metric"><span class="label">Confidence</span><span class="value">${esc(confidence)}</span></div>
+</div>
+
+<h2>Deal Logic</h2>
+<div class="section">
+<ul>
+${logicLines.map(l=>`<li>${esc(l)}</li>`).join('')}
+</ul>
+</div>
+
+<h2>Summary</h2>
+<div class="section">
+<p>${esc(summary)}</p>
+</div>
+
+<hr>
+
+<p style="font-size:12px;color:#777;">
+Generated by DealDigger Intelligence Engine<br>
+Confidential – For Investment Analysis Only
+</p>
+
+</body>
+</html>
+`;
+
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+}
 <html><head><meta charset="utf-8">
 <style>
 body{font-family:-apple-system,Segoe UI,Roboto;padding:30px;color:#101623}
