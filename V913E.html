@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DealDigger V91.3E Unified Card Outline</title>
+<style>
+:root{
+  --bg:#020713;
+  --ink:#f7fbff;
+  --muted:#c6d4e7;
+  --soft:#8fa5c1;
+  --blue:#63ceff;
+  --blue2:#38bdf8;
+  --orange:#d89b38;
+  --green:#4ade80;
+  --red:#f87171;
+  --amber:#f4bf4e;
+  --panel:#0b1730;
+  --panel2:#162a4b;
+  --line:rgba(142,192,255,.20);
+  --top:env(safe-area-inset-top,0px);
+  --bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.app{
+  width:100vw;height:100svh;overflow:hidden;position:relative;
+  padding:calc(10px + var(--top)) 10px calc(10px + var(--bottom));
+  background:
+    radial-gradient(520px 270px at 10% 0%,rgba(99,206,255,.17),transparent 70%),
+    radial-gradient(420px 250px at 100% 85%,rgba(59,130,246,.11),transparent 72%),
+    linear-gradient(180deg,#06162b,#03101f 68%,#020814);
+}
+.app:before{
+  content:"";position:absolute;inset:-30%;pointer-events:none;
+  background:linear-gradient(120deg,transparent 0 46%,rgba(255,255,255,.022) 49%,transparent 52%);
+}
+.shell{
+  position:relative;z-index:2;width:100%;max-width:410px;height:100%;margin:0 auto;
+  display:flex;flex-direction:column;gap:7px;transition:filter .22s ease,transform .22s ease,opacity .22s ease;
+}
+.app.drawer-open .shell{filter:blur(8px) saturate(.8);opacity:.43;transform:scale(.986)}
+
+/* Header */
+.header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+.logo{
+  font-weight:950;letter-spacing:-.09em;line-height:.82;white-space:nowrap;
+  font-size:clamp(31px,8.75vw,38px);overflow:hidden;
+}
+.logo .white{color:#fff}
+.logo .blue{color:var(--blue);text-shadow:0 0 22px rgba(99,206,255,.32)}
+.tag{
+  margin-top:5px;font-size:8px;letter-spacing:.15em;text-transform:uppercase;
+  color:#d0dceb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.settings{
+  padding:7px 10px;min-width:76px;border-radius:13px;
+  background:linear-gradient(180deg,rgba(55,72,113,.92),rgba(21,31,58,.98));
+  border:1px solid rgba(255,255,255,.11);
+  box-shadow:0 14px 30px rgba(0,0,0,.25);
+  font-weight:900;font-size:12px;opacity:.94;
+}
+.rule{
+  height:3px;border-radius:999px;
+  background:linear-gradient(90deg,var(--blue),#9be1ff 58%,var(--orange));
+  box-shadow:0 0 18px rgba(99,206,255,.22);
+}
+
+/* Top controls */
+.strip{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center}
+.mode{
+  min-height:28px;padding:3px;border-radius:15px;display:grid;grid-template-columns:1fr 1fr;
+  background:rgba(2,8,21,.72);border:1px solid var(--line);
+}
+.mode button{
+  padding:4px 8px;border-radius:12px;font-size:12.5px;font-weight:950;
+  color:#cad6e7;letter-spacing:-.03em;
+}
+.mode .active{
+  background:linear-gradient(180deg,#74d7ff,#3fc0ff);color:#061523;
+  box-shadow:0 9px 18px rgba(99,206,255,.20);
+}
+.chip{
+  min-height:28px;padding:0 9px;border-radius:12px;background:rgba(4,12,27,.78);
+  border:1px solid var(--line);font-size:8px;font-weight:950;
+  letter-spacing:.12em;text-transform:uppercase;color:#e4f5ff;white-space:nowrap;
+}
+
+/* Deal Desk */
+.desk{
+  flex:1;min-height:0;position:relative;overflow:hidden;border-radius:26px;isolation:isolate;
+  padding:10px;background:linear-gradient(180deg,rgba(39,58,96,.93),rgba(8,18,39,.985));
+  border:1px solid rgba(151,194,255,.25);
+  box-shadow:0 30px 82px rgba(0,0,0,.43),inset 0 1px 0 rgba(255,255,255,.05);
+  display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr);gap:5px;
+}
+.desk:before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(360px 160px at 0% 0%,rgba(99,206,255,.13),transparent 66%),
+    linear-gradient(110deg,rgba(99,206,255,.035),transparent 44%,rgba(216,155,56,.035));
+}
+.desk:after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:44%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(82% 58% at 50% 100%,rgba(99,206,255,.105),transparent 64%),
+    radial-gradient(68% 46% at 84% 100%,rgba(216,155,56,.052),transparent 70%),
+    linear-gradient(180deg,transparent 0%,rgba(3,10,24,.115) 34%,rgba(2,7,17,.45) 100%);
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.035),inset 0 -34px 70px rgba(0,0,0,.18);
+  opacity:.88;
+}
+.desk>*{position:relative;z-index:1;min-width:0}
+.deskTop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+.kicker{
+  font-size:7.1px;letter-spacing:.215em;text-transform:uppercase;font-weight:950;
+  color:#bfeaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.desk h1{
+  margin:2px 0 0;font-size:clamp(23px,6.45vw,29px);
+  line-height:.94;letter-spacing:-.066em;
+}
+.live{
+  padding:5px 8px;border-radius:999px;background:rgba(46,105,71,.42);
+  border:1px solid rgba(84,224,142,.18);color:#bffbd9;
+  font-size:7px;font-weight:950;letter-spacing:.125em;text-transform:uppercase;white-space:nowrap;
+}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.metric{
+  min-height:31px;padding:5px 7px;border-radius:12px;background:rgba(3,9,22,.56);
+  border:1px solid rgba(132,177,244,.14);display:flex;flex-direction:column;justify-content:center;
+}
+.metric label{
+  font-size:5.9px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;
+  color:#9fb3cd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.metric b{margin-top:1px;font-size:13px;letter-spacing:-.03em}
+.filters{
+  display:grid;grid-template-columns:auto auto auto minmax(0,1fr);
+  gap:5px;align-items:center;margin-bottom:1px;
+}
+.filter{
+  padding:5px 9px;border-radius:999px;background:rgba(4,10,24,.55);
+  border:1px solid rgba(132,186,255,.13);color:#c1d4ea;
+  font-size:8px;font-weight:950;letter-spacing:.11em;text-transform:uppercase;
+  transition:transform .14s ease,border-color .14s ease,background .14s ease;
+}
+.filter:active{transform:scale(.975)}
+.filter.active{
+  background:linear-gradient(180deg,rgba(22,66,118,.92),rgba(9,28,57,.98));
+  border-color:rgba(99,206,255,.28);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+.hint{
+  text-align:right;color:#b8c8dc;font-size:9.2px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;opacity:.82;
+}
+
+/* Next Best Action ribbon */
+.action{
+  position:relative;overflow:hidden;margin:1px 0 2px;padding:6px 7px;min-height:48px;border-radius:14px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center;
+  background:
+    linear-gradient(90deg,rgba(99,206,255,.075),rgba(99,206,255,.018) 45%,rgba(216,155,56,.022)),
+    linear-gradient(180deg,rgba(10,30,62,.86),rgba(5,15,34,.96));
+  border:1px solid rgba(99,206,255,.24);
+  box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.action:before{
+  content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:999px;
+  background:linear-gradient(180deg,var(--blue),rgba(99,206,255,.25));opacity:.95;
+}
+.action>div{padding-left:6px;min-width:0}
+.action label{
+  display:block;font-size:5.9px;font-weight:950;letter-spacing:.19em;text-transform:uppercase;color:#bceeff;
+}
+.action b{
+  display:block;margin-top:2px;font-size:11.7px;letter-spacing:-.03em;line-height:1.02;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.action span{
+  display:block;margin-top:2px;max-width:100%;font-size:8.3px;line-height:1.05;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(216,226,240,.86);
+}
+.primary{
+  min-width:84px;padding:7px 8px;border-radius:12px;
+  background:linear-gradient(180deg,#78d9ff,#3ec0ff);color:#061523;
+  font-weight:950;font-size:9.8px;white-space:nowrap;
+  border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 26px rgba(99,206,255,.20);
+}
+
+/* Queue */
+.queue{
+  min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;
+  display:grid;gap:5px;padding-right:2px;
+}
+.queue::-webkit-scrollbar{width:3px}
+.queue::-webkit-scrollbar-thumb{background:rgba(161,204,255,.38);border-radius:999px}
+.sectionLabel{
+  display:flex;align-items:center;gap:8px;padding:1px 2px 0;margin:0 0 -2px;
+  font-size:6.25px;line-height:1;letter-spacing:.175em;font-weight:900;text-transform:uppercase;
+  color:rgba(190,220,245,.74);opacity:.86;
+}
+.sectionLabel.hidden{display:none}
+.sectionLabel:after{
+  content:"";display:block;height:1px;flex:1;border-radius:999px;
+  background:linear-gradient(90deg,rgba(99,206,255,.24),rgba(151,194,255,.055),transparent);
+}
+.sectionLabel:first-child{margin-top:1px}
+.dealRow + .sectionLabel{margin-top:-2px}
+.sectionLabel[data-section="draft"]{margin-top:-4px;color:rgba(190,220,245,.64)}
+.sectionLabel[data-section="draft"]:after{
+  background:linear-gradient(90deg,rgba(151,194,255,.17),rgba(151,194,255,.045),transparent);
+}
+.emptyState{
+  display:none;padding:18px 14px;border-radius:18px;background:rgba(3,9,22,.44);
+  border:1px dashed rgba(151,194,255,.20);color:#cbd8e9;
+}
+.emptyState.show{display:block}
+.emptyState b{font-size:15px}
+.emptyState p{margin:5px 0 0;font-size:11px;color:#9fb3ca;line-height:1.25}
+
+.dealRow{
+  width:100%;text-align:left;display:grid;gap:5px;padding:8px 9px;border-radius:16px;
+  background:linear-gradient(180deg,rgba(9,23,48,.96),rgba(4,11,27,.99));
+  border:1px solid rgba(135,188,255,.16);
+  box-shadow:0 15px 36px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025);
+  transition:transform .15s ease,border-color .15s ease,background .15s ease;
+}
+.dealRow:active{transform:scale(.992)}
+.dealRow.hidden{display:none!important}
+.dealRow.selected{
+  margin-bottom:1px;border-color:rgba(99,206,255,.46);
+  background:
+    radial-gradient(260px 120px at 0% 0%,rgba(99,206,255,.055),transparent 70%),
+    linear-gradient(180deg,rgba(11,29,60,.985),rgba(4,12,29,.995));
+  box-shadow:0 16px 40px rgba(0,0,0,.24),0 0 0 1px rgba(99,206,255,.08),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.dealRow.selected:before{
+  content:"OPEN CASE FILE";display:block;width:max-content;max-width:100%;padding:0;
+  font-size:6.4px;font-weight:950;letter-spacing:.19em;text-transform:uppercase;color:#a9ecff;opacity:.78;
+}
+.dealRow:not(.selected){
+  min-height:45px;padding:7px 9px;align-content:center;
+  background:linear-gradient(180deg,rgba(8,20,43,.88),rgba(4,11,27,.96));
+  border-color:rgba(135,188,255,.135);
+}
+.dealRow:not(.selected) .caseMeta,
+.dealRow:not(.selected) .workflow,
+.dealRow:not(.selected) .readiness{display:none}
+.dealRow:not(.selected) .rowTop{align-items:center}
+.dealRow:not(.selected):active{border-color:rgba(99,206,255,.28)}
+
+.rowTop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}
+.dealName b{display:block;font-size:14.2px;letter-spacing:-.03em;line-height:1.03}
+.dealName span{
+  display:block;margin-top:2px;color:#b2c1d5;font-size:10px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.dealRow:not(.selected) .dealName b{font-size:13.9px}
+.dealRow:not(.selected) .dealName span{font-size:9.8px}
+.stage{
+  max-width:128px;overflow:hidden;text-overflow:ellipsis;padding:4px 7px;border-radius:999px;
+  background:rgba(30,74,128,.36);border:1px solid rgba(99,206,255,.20);
+  color:#c8efff;font-size:6.4px;font-weight:950;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
+}
+.dealRow:not(.selected) .stage{opacity:.96}
+.stage.waiting{background:rgba(112,73,7,.43);border-color:rgba(255,211,120,.20);color:#ffdf8b}
+.stage.ready{background:rgba(20,86,65,.42);border-color:rgba(77,219,139,.20);color:#bffbd9}
+.stage.draft{background:rgba(70,82,105,.40);border-color:rgba(175,195,225,.16);color:#d7e2f1}
+.stage.blocked{background:rgba(120,45,55,.42);border-color:rgba(248,113,113,.20);color:#ffc7cb}
+
+.caseMeta{display:flex;flex-wrap:wrap;gap:4px;margin-top:-1px}
+.caseMeta span{
+  padding:3px 7px;border-radius:999px;background:rgba(3,9,22,.44);
+  border:1px solid rgba(255,255,255,.055);color:#b9cae0;
+  font-size:7.6px;font-weight:850;letter-spacing:.015em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+}
+.caseMeta .urgent{color:#ffe2a3;border-color:rgba(244,191,78,.20);background:rgba(112,73,7,.28)}
+.caseMeta .ready{color:#bdffd8;border-color:rgba(77,219,139,.18);background:rgba(20,86,65,.26)}
+.caseMeta .blocked{color:#ffc7cb;border-color:rgba(248,113,113,.20);background:rgba(120,45,55,.26)}
+
+.workflow{
+  display:grid;grid-template-columns:1.05fr .95fr;gap:0;padding:5px;border-radius:14px;
+  background:rgba(2,8,21,.34);border:1px solid rgba(255,255,255,.045);
+}
+.work{
+  min-height:42px;padding:5px 8px;border:0;background:transparent;border-radius:10px;
+}
+.work:first-child{border-right:1px solid rgba(151,194,255,.085)}
+.work label{
+  display:block;font-size:5.7px;font-weight:950;letter-spacing:.15em;text-transform:uppercase;color:#9db6d2;
+}
+.work b{
+  display:block;margin-top:3px;font-size:11.5px;letter-spacing:-.02em;line-height:1.04;
+}
+.work span{
+  display:block;margin-top:2px;color:#c3d1e4;font-size:8.6px;line-height:1.08;
+}
+.readiness{display:flex;flex-wrap:wrap;gap:4px;margin-top:-1px}
+.r{
+  padding:3px 7px;border-radius:999px;background:rgba(2,8,21,.40);
+  border:1px solid rgba(151,194,255,.075);
+}
+.r b{
+  display:block;margin:0;font-size:8.5px;line-height:1;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Dock */
+.dock{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:5px;border-radius:20px;
+  background:linear-gradient(180deg,rgba(6,16,34,.83),rgba(2,8,20,.86));
+  border:1px solid rgba(151,194,255,.18);
+  box-shadow:0 16px 42px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.dock button{
+  min-height:33px;border-radius:13px;background:rgba(11,25,50,.64);
+  border:1px solid rgba(151,194,255,.095);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  font-weight:950;font-size:9.7px;color:#f3f8ff;
+  transition:transform .14s ease,border-color .14s ease,background .14s ease,opacity .14s ease;
+}
+.dock button:before{
+  content:attr(data-abbr);font-size:6.4px;letter-spacing:.11em;color:#89dfff;opacity:.70;
+}
+.dock button:active{transform:scale(.972)}
+.dock button.main{
+  background:linear-gradient(180deg,rgba(73,199,255,.98),rgba(25,132,201,.96));
+  color:#03131f;border-color:rgba(255,255,255,.18);
+  box-shadow:0 12px 26px rgba(99,206,255,.20),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.dock button.main:before{color:#073147;opacity:.95}
+.dock small{
+  margin-top:0;font-size:5.9px;letter-spacing:.095em;text-transform:uppercase;color:#9fb4cd;
+}
+.dock .main small{color:#0b3145}
+
+/* Drawers */
+.backdrop{
+  position:absolute;inset:0;z-index:18;background:rgba(2,6,14,.36);
+  backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s ease;
+}
+.backdrop.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:absolute;z-index:22;opacity:0;pointer-events:none;overflow:hidden;
+  background:linear-gradient(180deg,rgba(29,45,82,.985),rgba(7,16,35,.995));
+  border:1px solid rgba(151,194,255,.24);
+  box-shadow:0 32px 100px rgba(0,0,0,.58);
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s ease;
+}
+.drawer.open{opacity:1;pointer-events:auto}
+.drawer.bottom{
+  left:50%;bottom:0;width:min(calc(100vw - 16px),410px);height:min(77svh,650px);
+  border-radius:28px 28px 0 0;transform:translate(-50%,104%);
+}
+.drawer.bottom.open{transform:translate(-50%,0)}
+.drawer.top{
+  left:50%;top:0;width:min(calc(100vw - 16px),410px);height:min(42svh,360px);
+  border-radius:0 0 28px 28px;transform:translate(-50%,-104%);
+}
+.drawer.top.open{transform:translate(-50%,0)}
+.dh{
+  display:flex;justify-content:space-between;gap:10px;padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.dh h3{margin:0;font-size:24px;letter-spacing:-.04em}
+.dh p{margin:5px 0 0;color:#ccd8e8;font-size:13px;line-height:1.2}
+.close{
+  width:40px;height:40px;flex:none;border-radius:14px;background:rgba(6,14,31,.85);
+  border:1px solid rgba(255,255,255,.08);font-size:25px;
+}
+.db{
+  padding:14px 16px 20px;display:grid;gap:10px;overflow:auto;
+  -webkit-overflow-scrolling:touch;max-height:calc(100% - 80px);
+}
+.mountGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mount{
+  min-height:82px;padding:11px;border-radius:16px;border:1px dashed rgba(151,194,255,.24);
+  background:rgba(8,18,39,.44);
+}
+.mount b{font-size:14px}
+.mount p{margin:5px 0 0;font-size:11.5px;color:#a9bbd4;line-height:1.16}
+.statsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sheetStat{
+  min-height:68px;padding:10px;border-radius:16px;background:rgba(4,10,24,.6);
+  border:1px solid rgba(255,255,255,.07);
+}
+.sheetStat label{
+  display:block;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#9fb0ca;font-weight:950;
+}
+.sheetStat b{display:block;margin-top:8px;font-size:16px}
+
+/* Short-screen safeguards */
+@media(max-height:805px){
+  .shell{gap:6px}
+  .tag{display:none}
+  .desk{padding:9px;gap:5px}
+  .desk h1{font-size:25px}
+  .metric{min-height:29px}
+  .metric label{display:none}
+  .metric b{margin:0;text-align:center}
+  .filter{padding:5px 9px;font-size:8px}
+  .action{min-height:43px;padding:5px 7px}
+  .action span{display:none}
+  .primary{min-width:78px;padding:6px 8px}
+  .sectionLabel{font-size:6px;letter-spacing:.165em;margin-bottom:-3px}
+  .dealRow + .sectionLabel{margin-top:-2px}
+  .dealRow:not(.selected){min-height:44px}
+  .dealRow.selected:before{display:none}
+  .caseMeta span{font-size:7.3px;padding:3px 6px}
+  .workflow{padding:4px}
+  .work{min-height:38px}
+  .work span{display:none}
+  .dock button{min-height:32px}
+}
+@media(max-height:720px){
+  .logo{font-size:31px}
+  .desk h1{font-size:22px}
+  .metric{min-height:27px}
+  .action{min-height:38px}
+  .action label{display:none}
+  .action b{margin-top:0;font-size:11px}
+  .workflow{grid-template-columns:1fr}
+  .work:first-child{border-right:0}
+  .work:nth-child(2){display:none}
+  .caseMeta span:nth-child(3){display:none}
+  .primary{min-width:80px}
+  .dock{padding:4px}
+  .dock button{min-height:30px}
+  .dock small{display:none}
+  .sectionLabel{opacity:.74}
+  .sectionLabel:after{opacity:.75}
+}
+
+/* V91.3 Drawer Visual Standard
+   Purpose:
+   - Make every drawer feel worthy of the Deal Desk.
+   - Keep drawer IDs, open/close behavior, dock, filters, queue, and shell intact.
+   - These are still mount-ready rooms, not transplanted old tool guts yet.
+*/
+.drawer{
+  background:
+    radial-gradient(360px 160px at 0% 0%,rgba(99,206,255,.13),transparent 68%),
+    linear-gradient(180deg,rgba(30,48,87,.992),rgba(5,14,31,.998)) !important;
+}
+.drawer.bottom{
+  height:min(80svh,670px) !important;
+}
+.dh{
+  position:relative !important;
+  padding:16px 16px 13px !important;
+  align-items:flex-start !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01)),
+    linear-gradient(90deg,rgba(99,206,255,.045),transparent 62%) !important;
+}
+.dh:before{
+  content:"" !important;
+  position:absolute !important;
+  left:50% !important;
+  top:7px !important;
+  width:44px !important;
+  height:4px !important;
+  border-radius:999px !important;
+  transform:translateX(-50%) !important;
+  background:rgba(209,231,255,.22) !important;
+}
+.drawerKicker{
+  display:block;
+  margin-bottom:5px;
+  font-size:7px;
+  line-height:1;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  font-weight:950;
+  color:#aee8ff;
+}
+.drawerTitleRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.dh h3{
+  font-size:23px !important;
+  line-height:.98 !important;
+}
+.drawerStatus{
+  display:inline-flex;
+  align-items:center;
+  height:22px;
+  padding:0 9px;
+  border-radius:999px;
+  background:rgba(20,86,65,.33);
+  border:1px solid rgba(77,219,139,.16);
+  color:#bffbd9;
+  font-size:7px;
+  font-weight:950;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.drawerStatus.waiting{
+  background:rgba(112,73,7,.32);
+  border-color:rgba(255,211,120,.18);
+  color:#ffdf8b;
+}
+.drawerStatus.neutral{
+  background:rgba(70,82,105,.35);
+  border-color:rgba(175,195,225,.13);
+  color:#d7e2f1;
+}
+.dh p{
+  max-width:310px;
+  margin-top:6px !important;
+  font-size:12px !important;
+  color:#c7d6e9 !important;
+}
+.close{
+  width:38px !important;
+  height:38px !important;
+  border-radius:13px !important;
+  line-height:1 !important;
+}
+.db{
+  padding:12px 14px 22px !important;
+  gap:10px !important;
+}
+.drawerDirective{
+  position:relative;
+  padding:10px 11px 10px 14px;
+  border-radius:17px;
+  background:
+    linear-gradient(90deg,rgba(99,206,255,.065),transparent 50%),
+    rgba(4,12,27,.56);
+  border:1px solid rgba(99,206,255,.17);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+}
+.drawerDirective:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:11px;
+  bottom:11px;
+  width:3px;
+  border-radius:999px;
+  background:linear-gradient(180deg,var(--blue),rgba(99,206,255,.20));
+}
+.drawerDirective label{
+  display:block;
+  font-size:6.9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:950;
+  color:#bceeff;
+}
+.drawerDirective b{
+  display:block;
+  margin-top:5px;
+  font-size:13.2px;
+  line-height:1.08;
+  letter-spacing:-.025em;
+}
+.drawerDirective span{
+  display:block;
+  margin-top:4px;
+  color:#b8c8dd;
+  font-size:10.5px;
+  line-height:1.16;
+}
+.roomStats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+.roomStat{
+  min-height:48px;
+  padding:8px;
+  border-radius:14px;
+  background:rgba(3,9,22,.48);
+  border:1px solid rgba(151,194,255,.10);
+}
+.roomStat label{
+  display:block;
+  font-size:6.2px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  font-weight:950;
+  color:#93abc7;
+}
+.roomStat b{
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  line-height:1.05;
+}
+.roomLabel{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:1px 1px -3px;
+  font-size:6.8px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:950;
+  color:rgba(190,220,245,.72);
+}
+.roomLabel:after{
+  content:"";
+  height:1px;
+  flex:1;
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(99,206,255,.22),rgba(151,194,255,.045),transparent);
+}
+.mountGrid{
+  grid-template-columns:1fr 1fr !important;
+  gap:8px !important;
+}
+.mount{
+  position:relative;
+  min-height:86px !important;
+  padding:11px !important;
+  border-style:solid !important;
+  border-color:rgba(151,194,255,.12) !important;
+  background:
+    radial-gradient(180px 90px at 0% 0%,rgba(99,206,255,.055),transparent 70%),
+    linear-gradient(180deg,rgba(8,20,43,.72),rgba(3,10,24,.88)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.mount:after{
+  content:"";
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:rgba(99,206,255,.34);
+  box-shadow:0 0 16px rgba(99,206,255,.25);
+}
+.mount[data-state="ready"]:after{background:rgba(74,222,128,.70)}
+.mount[data-state="waiting"]:after{background:rgba(244,191,78,.78)}
+.mount[data-state="blocked"]:after{background:rgba(248,113,113,.78)}
+.mount[data-state="neutral"]:after{background:rgba(151,194,255,.28)}
+.mount b{
+  display:block;
+  padding-right:16px;
+  font-size:13.2px !important;
+  line-height:1.05;
+  letter-spacing:-.02em;
+}
+.mount p{
+  margin-top:6px !important;
+  font-size:10.2px !important;
+  line-height:1.18 !important;
+}
+.mount small{
+  display:inline-flex;
+  margin-top:8px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:rgba(3,9,22,.48);
+  border:1px solid rgba(151,194,255,.085);
+  color:#b8c9de;
+  font-size:6.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.drawerFoot{
+  padding:9px 11px;
+  border-radius:15px;
+  background:rgba(3,9,22,.42);
+  border:1px solid rgba(151,194,255,.10);
+  color:#b7c8de;
+  font-size:10.5px;
+  line-height:1.22;
+}
+.drawerFoot b{
+  color:#fff;
+}
+.sheetStat{
+  min-height:60px !important;
+  border-color:rgba(151,194,255,.10) !important;
+  background:
+    radial-gradient(120px 70px at 0% 0%,rgba(99,206,255,.05),transparent 70%),
+    rgba(4,10,24,.58) !important;
+}
+.sheetStat b{
+  font-size:15px !important;
+}
+@media(max-height:805px){
+  .drawer.bottom{height:min(82svh,670px) !important}
+  .dh{padding:14px 14px 11px !important}
+  .dh h3{font-size:21px !important}
+  .dh p{font-size:11px !important}
+  .drawerDirective{padding:9px 10px 9px 13px}
+  .roomStats{gap:6px}
+  .roomStat{min-height:43px;padding:7px}
+  .mount{min-height:78px !important;padding:10px !important}
+  .mount p{font-size:9.8px !important}
+}
+@media(max-height:720px){
+  .drawerDirective span{display:none}
+  .roomStats{grid-template-columns:repeat(3,1fr)}
+  .roomStat label{display:none}
+  .roomStat b{margin-top:0;text-align:center}
+  .mountGrid{grid-template-columns:1fr !important}
+  .mount{min-height:68px !important}
+  .mount small{display:none}
+}
+
+
+/* V91.3A Interaction and Drawer Polish
+   - Queue content packs to the top in Drafts/Ready filters.
+   - Selected rows stop stretching in filtered views.
+   - Case signal pills size to their words instead of expanding.
+   - Bottom drawers become more content-aware with less empty lower space.
+*/
+
+/* Filtered queue should pack naturally from the top. */
+.queue{
+  align-content:start !important;
+  justify-content:stretch !important;
+}
+.dealRow{
+  align-self:start !important;
+  align-content:start !important;
+}
+.dealRow.selected{
+  align-self:start !important;
+  align-content:start !important;
+}
+
+/* Prevent signal chips from stretching when one card is alone in a filtered view. */
+.caseMeta,
+.readiness{
+  align-items:flex-start !important;
+  align-content:flex-start !important;
+}
+.caseMeta span,
+.r{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:fit-content !important;
+  max-width:100% !important;
+  flex:0 0 auto !important;
+  min-height:0 !important;
+}
+.caseMeta span{
+  line-height:1 !important;
+  min-height:19px !important;
+}
+.r{
+  min-height:18px !important;
+}
+.workflow{
+  align-self:start !important;
+}
+.work{
+  align-self:stretch !important;
+}
+.readiness{
+  align-self:start !important;
+}
+
+/* Make drawers feel content-aware instead of oversized shells. */
+.drawer.bottom{
+  height:auto !important;
+  max-height:min(76svh,640px) !important;
+}
+.drawer.bottom .db{
+  max-height:calc(76svh - 94px) !important;
+}
+.drawer.top{
+  height:auto !important;
+  max-height:min(42svh,360px) !important;
+}
+.drawer.top .db{
+  max-height:calc(42svh - 90px) !important;
+}
+.db{
+  padding-bottom:16px !important;
+}
+.drawerFoot{
+  margin-top:0 !important;
+}
+.roomLabel{
+  margin-top:0 !important;
+}
+
+@media(max-height:805px){
+  .drawer.bottom{
+    max-height:min(74svh,620px) !important;
+  }
+  .drawer.bottom .db{
+    max-height:calc(74svh - 88px) !important;
+  }
+  .caseMeta span{
+    min-height:18px !important;
+  }
+}
+@media(max-height:720px){
+  .drawer.bottom{
+    max-height:min(78svh,610px) !important;
+  }
+  .drawer.bottom .db{
+    max-height:calc(78svh - 84px) !important;
+  }
+}
+
+
+/* V91.3B Contextual Outlook Polish
+   Adds a filter-aware top briefing under Next Best Action.
+   Non-redundant purpose:
+   - Next Best Action = do this now
+   - Queue cards = deal records
+   - Outlook = cross-view signals
+*/
+.outlook{
+  display:grid;
+  gap:5px;
+  margin:0 0 3px;
+  padding:7px;
+  border-radius:15px;
+  background:
+    linear-gradient(90deg,rgba(99,206,255,.035),transparent 62%),
+    rgba(3,9,22,.25);
+  border:1px solid rgba(151,194,255,.075);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018);
+}
+.outlookHead{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.outlookHead span{
+  font-size:6.3px;
+  line-height:1;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+  font-weight:950;
+  color:rgba(190,236,255,.82);
+  white-space:nowrap;
+}
+.outlookHead:after{
+  content:"";
+  height:1px;
+  flex:1;
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(99,206,255,.18),rgba(151,194,255,.04),transparent);
+}
+.outlookHead em{
+  font-style:normal;
+  font-size:6.2px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  font-weight:900;
+  color:rgba(190,207,226,.58);
+  white-space:nowrap;
+}
+.outlookGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
+.outlookTile{
+  position:relative;
+  min-height:39px;
+  padding:7px 7px 6px;
+  border-radius:12px;
+  background:rgba(2,8,21,.44);
+  border:1px solid rgba(151,194,255,.08);
+  overflow:hidden;
+}
+.outlookTile:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  bottom:8px;
+  width:2px;
+  border-radius:999px;
+  opacity:.76;
+  background:rgba(151,194,255,.35);
+}
+.outlookTile.ready:before{background:rgba(74,222,128,.75)}
+.outlookTile.waiting:before{background:rgba(244,191,78,.80)}
+.outlookTile.blocked:before{background:rgba(248,113,113,.80)}
+.outlookTile.neutral:before{background:rgba(99,206,255,.62)}
+.outlookTile label{
+  display:block;
+  padding-left:4px;
+  font-size:5.7px;
+  line-height:1;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  font-weight:950;
+  color:rgba(166,187,211,.74);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.outlookTile b{
+  display:block;
+  padding-left:4px;
+  margin-top:4px;
+  font-size:8.2px;
+  line-height:1.04;
+  letter-spacing:-.015em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.outlookTile span{
+  display:block;
+  padding-left:4px;
+  margin-top:2px;
+  font-size:6.7px;
+  line-height:1.05;
+  color:rgba(191,207,225,.72);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+@media(max-height:805px){
+  .outlook{
+    padding:6px;
+    gap:4px;
+  }
+  .outlookTile{
+    min-height:33px;
+    padding:6px 6px 5px;
+  }
+  .outlookTile span{
+    display:none;
+  }
+}
+@media(max-height:720px){
+  .outlook{
+    display:none;
+  }
+}
+
+
+/* V91.3D Card Rhythm + Outline Consistency
+   Scope:
+   - Slightly increase breathing room between queue cards.
+   - Make card outlines visually consistent across outlook, deal rows, action ribbon, metrics, and pills.
+   - Preserve desk floor fade, filters, dock, drawers, routing, and all JavaScript behavior.
+*/
+.desk{
+  gap:6px;
+}
+.metrics{
+  gap:6px;
+}
+.metric{
+  border-color:rgba(132,177,244,.19);
+  box-shadow:0 8px 18px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.filters{
+  gap:6px;
+  margin-bottom:2px;
+}
+.filter{
+  border-color:rgba(132,186,255,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.filter.active{
+  border-color:rgba(99,206,255,.36);
+  box-shadow:0 0 0 1px rgba(99,206,255,.055),inset 0 1px 0 rgba(255,255,255,.065);
+}
+.action{
+  margin:2px 0 4px;
+  border-color:rgba(99,206,255,.30);
+  box-shadow:0 12px 26px rgba(0,0,0,.20),0 0 0 1px rgba(99,206,255,.045),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.outlook{
+  margin:1px 0 5px;
+  border-color:rgba(151,194,255,.13);
+  box-shadow:0 9px 22px rgba(0,0,0,.12),0 0 0 1px rgba(99,206,255,.03),inset 0 1px 0 rgba(255,255,255,.028);
+}
+.outlookGrid{
+  gap:6px;
+}
+.outlookTile{
+  border-color:rgba(151,194,255,.145);
+  box-shadow:0 7px 16px rgba(0,0,0,.10),0 0 0 1px rgba(99,206,255,.025),inset 0 1px 0 rgba(255,255,255,.028);
+}
+.queue{
+  gap:7px;
+}
+.sectionLabel{
+  margin:2px 0 0;
+  padding:2px 2px 0;
+}
+.sectionLabel:first-child{
+  margin-top:2px;
+}
+.dealRow + .sectionLabel{
+  margin-top:2px;
+}
+.sectionLabel[data-section="draft"]{
+  margin-top:3px;
+}
+.dealRow{
+  gap:6px;
+  border-color:rgba(135,188,255,.24);
+  box-shadow:0 16px 38px rgba(0,0,0,.23),0 0 0 1px rgba(99,206,255,.04),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.dealRow:not(.selected){
+  border-color:rgba(135,188,255,.205);
+  box-shadow:0 13px 30px rgba(0,0,0,.19),0 0 0 1px rgba(99,206,255,.028),inset 0 1px 0 rgba(255,255,255,.026);
+}
+.dealRow.selected{
+  border-color:rgba(99,206,255,.52);
+  box-shadow:0 17px 42px rgba(0,0,0,.25),0 0 0 1px rgba(99,206,255,.12),0 0 24px rgba(99,206,255,.055),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.stage{
+  border-color:rgba(99,206,255,.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.stage.waiting{border-color:rgba(255,211,120,.26)}
+.stage.ready{border-color:rgba(77,219,139,.26)}
+.stage.draft{border-color:rgba(175,195,225,.21)}
+.stage.blocked{border-color:rgba(248,113,113,.26)}
+.caseMeta{
+  gap:5px;
+}
+.caseMeta span,
+.r{
+  border-color:rgba(151,194,255,.13);
+  background:rgba(3,9,22,.50);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 0 1px rgba(99,206,255,.018);
+}
+.caseMeta .urgent{border-color:rgba(244,191,78,.27)}
+.caseMeta .ready{border-color:rgba(77,219,139,.25)}
+.caseMeta .blocked{border-color:rgba(248,113,113,.27)}
+.workflow{
+  margin-top:1px;
+  border-color:rgba(151,194,255,.105);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.026);
+}
+.work:first-child{
+  border-right-color:rgba(151,194,255,.125);
+}
+.readiness{
+  gap:5px;
+}
+
+@media(max-height:805px){
+  .desk{gap:6px}
+  .metrics{gap:6px}
+  .filters{gap:6px;margin-bottom:2px}
+  .action{margin:1px 0 3px}
+  .outlook{margin:0 0 4px}
+  .outlookGrid{gap:5px}
+  .queue{gap:6px}
+  .sectionLabel{margin:1px 0 0;padding-top:1px}
+  .dealRow + .sectionLabel{margin-top:1px}
+  .sectionLabel[data-section="draft"]{margin-top:2px}
+  .dealRow{gap:5px}
+  .caseMeta,.readiness{gap:4px}
+}
+@media(max-height:720px){
+  .queue{gap:5px}
+  .sectionLabel{margin:0}
+  .dealRow + .sectionLabel{margin-top:0}
+  .sectionLabel[data-section="draft"]{margin-top:1px}
+}
+
+
+/* V91.3E Unified Card Outline Standard
+   Scope:
+   - One shared visual outline language for all true Deal Desk cards.
+   - Selected card remains slightly elevated, but no longer uses a different outline family.
+   - No JavaScript, routing, filters, drawer, dock, or layout structure changes.
+*/
+:root{
+  --dd-card-stroke:rgba(118,188,255,.265);
+  --dd-card-stroke-selected:rgba(118,188,255,.345);
+  --dd-card-ring:rgba(99,206,255,.042);
+  --dd-card-ring-selected:rgba(99,206,255,.075);
+  --dd-card-inner:rgba(255,255,255,.032);
+  --dd-card-shadow:0 13px 30px rgba(0,0,0,.19),0 0 0 1px var(--dd-card-ring),inset 0 1px 0 var(--dd-card-inner);
+}
+.metric,
+.action,
+.outlook,
+.outlookTile,
+.dealRow,
+.dealRow:not(.selected),
+.workflow{
+  border-color:var(--dd-card-stroke) !important;
+  box-shadow:var(--dd-card-shadow) !important;
+}
+.dealRow.selected{
+  border-color:var(--dd-card-stroke-selected) !important;
+  box-shadow:0 16px 38px rgba(0,0,0,.23),0 0 0 1px var(--dd-card-ring-selected),0 0 20px rgba(99,206,255,.035),inset 0 1px 0 rgba(255,255,255,.038) !important;
+}
+.action{
+  border-color:var(--dd-card-stroke-selected) !important;
+  box-shadow:0 14px 32px rgba(0,0,0,.21),0 0 0 1px var(--dd-card-ring-selected),inset 0 1px 0 rgba(255,255,255,.038) !important;
+}
+.outlook{
+  border-color:var(--dd-card-stroke) !important;
+}
+.outlookTile{
+  background:linear-gradient(180deg,rgba(6,17,36,.58),rgba(2,8,21,.52)) !important;
+}
+.dealRow:not(.selected){
+  background:linear-gradient(180deg,rgba(8,20,43,.88),rgba(4,11,27,.96)) !important;
+}
+.dealRow.selected{
+  background:
+    radial-gradient(260px 120px at 0% 0%,rgba(99,206,255,.050),transparent 70%),
+    linear-gradient(180deg,rgba(11,29,60,.985),rgba(4,12,29,.995)) !important;
+}
+.caseMeta span,
+.r,
+.stage,
+.filter,
+.primary{
+  border-width:1px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 0 0 1px rgba(99,206,255,.014) !important;
+}
+.caseMeta span,
+.r{
+  border-color:rgba(151,194,255,.15) !important;
+}
+.stage{
+  border-color:rgba(151,194,255,.17) !important;
+}
+.filter{
+  border-color:rgba(151,194,255,.16) !important;
+}
+.filter.active{
+  border-color:rgba(118,188,255,.31) !important;
+  box-shadow:0 0 0 1px rgba(99,206,255,.055),inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.primary{
+  border-color:rgba(255,255,255,.18) !important;
+}
+.work:first-child{
+  border-right-color:rgba(151,194,255,.13) !important;
+}
+@media(max-height:805px){
+  .metric,
+  .action,
+  .outlook,
+  .outlookTile,
+  .dealRow,
+  .dealRow:not(.selected),
+  .workflow{
+    box-shadow:0 11px 24px rgba(0,0,0,.17),0 0 0 1px var(--dd-card-ring),inset 0 1px 0 var(--dd-card-inner) !important;
+  }
+  .dealRow.selected{
+    box-shadow:0 14px 31px rgba(0,0,0,.22),0 0 0 1px var(--dd-card-ring-selected),0 0 16px rgba(99,206,255,.032),inset 0 1px 0 rgba(255,255,255,.038) !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <main class="shell">
+    <header class="header">
+      <div>
+        <div class="logo"><span class="white">Deal</span><span class="blue">DIGGER</span></div>
+        <div class="tag">Acquisition and Distribution Control Engine</div>
+      </div>
+      <button class="settings" data-open="tools">Settings</button>
+    </header>
+
+    <div class="rule"></div>
+
+    <section class="strip">
+      <div class="mode"><button class="active">House</button><button>Land</button></div>
+      <button class="chip" data-open="stats">Stats ▾</button>
+      <button class="chip" data-open="saved">Saved</button>
+    </section>
+
+    <section class="desk" aria-label="DealDigger Deal Desk">
+      <div class="deskTop">
+        <div>
+          <div class="kicker">DealDigger Execution Center</div>
+          <h1>Deal Desk.</h1>
+        </div>
+        <div class="live">Live Queue</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric"><label>Active</label><b>2</b></div>
+        <div class="metric"><label>Drafts</label><b>2</b></div>
+        <div class="metric"><label>Await sign</label><b>1</b></div>
+        <div class="metric"><label>Ready</label><b>1</b></div>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-filter="queue">Queue</button>
+        <button class="filter" data-filter="drafts">Drafts</button>
+        <button class="filter" data-filter="ready">Ready</button>
+        <span class="hint">Select a deal to steer the workflow.</span>
+      </div>
+
+      <div class="action">
+        <div>
+          <label>Next Best Action</label>
+          <b id="nextTitle">Cleveland 44120 · Finish seller execution</b>
+          <span id="nextDetail">One seller-side signature remains before routing the investor or title packet.</span>
+        </div>
+        <button class="primary" id="primaryAction">Open Execute</button>
+      </div>
+
+      <div class="queue" id="queue">
+        <div class="outlook" id="deskOutlook" aria-label="Contextual desk outlook">
+          <div class="outlookHead"><span id="outlookTitle">Queue Outlook</span><em id="outlookMeta">live signals</em></div>
+          <div class="outlookGrid">
+            <div class="outlookTile ready" id="outlookTile1"><label id="outlook1Label">Next up</label><b id="outlook1Title">Norfolk investor review</b><span id="outlook1Detail">Ready to route</span></div>
+            <div class="outlookTile waiting" id="outlookTile2"><label id="outlook2Label">Waiting</label><b id="outlook2Title">Cleveland seller packet</b><span id="outlook2Detail">2 days pending</span></div>
+            <div class="outlookTile blocked" id="outlookTile3"><label id="outlook3Label">Blocked</label><b id="outlook3Title">Columbus intake</b><span id="outlook3Detail">Needs source certainty</span></div>
+          </div>
+        </div>
+        <div class="sectionLabel" data-section="active">Active Queue</div>
+
+        <button class="dealRow selected" data-section="active" data-status="waiting" data-title="Cleveland 44120" data-action="Finish seller execution" data-detail="One seller-side signature remains before routing the investor or title packet." data-drawer="execute">
+          <div class="rowTop">
+            <div class="dealName"><b>Cleveland 44120</b><span>3633 E 147th St • Pass • Land Flip</span></div>
+            <span class="stage waiting">Seller packet out</span>
+          </div>
+          <div class="caseMeta"><span class="urgent">Waiting 2 days</span><span>1 signature pending</span><span>3 docs approved</span></div>
+          <div class="workflow">
+            <div class="work"><label>Next best step</label><b>Seller signature follow-up</b><span>1 document still needs seller execution.</span></div>
+            <div class="work"><label>Who is next</label><b>Seller</b><span>Purchase agreement + acknowledgement pending.</span></div>
+          </div>
+          <div class="readiness"><div class="r"><b>3 approved</b></div><div class="r"><b>Seller 80%</b></div><div class="r"><b>Brief ready</b></div><div class="r"><b>Route seller</b></div></div>
+        </button>
+
+        <button class="dealRow" data-section="active" data-status="ready" data-title="Norfolk 23503" data-action="Release investor review packet" data-detail="Investor packet is assembled. Review approved files, then route NDA and assignment package." data-drawer="execute">
+          <div class="rowTop">
+            <div class="dealName"><b>Norfolk 23503</b><span>Bayview Ave • Assignable deal • House</span></div>
+            <span class="stage ready">Investor review</span>
+          </div>
+          <div class="caseMeta"><span class="ready">Ready to route</span><span>5 files approved</span><span>1 recipient</span></div>
+          <div class="workflow">
+            <div class="work"><label>Next best step</label><b>Open investor packet</b><span>Packet is assembled and waiting for release.</span></div>
+            <div class="work"><label>Who is next</label><b>Investor</b><span>NDA and assignment package ready for review.</span></div>
+          </div>
+          <div class="readiness"><div class="r"><b>5 approved</b></div><div class="r"><b>Investor ready</b></div><div class="r"><b>Brief draft</b></div><div class="r"><b>1 recipient</b></div></div>
+        </button>
+
+        <div class="sectionLabel" data-section="draft">Draft Queue</div>
+
+        <button class="dealRow" data-section="draft" data-status="draft" data-title="Richmond Draft" data-action="Finish ARV / comp review" data-detail="Comps are staged but not applied. Use Analyze, then save the deal if the numbers survive." data-drawer="analyze">
+          <div class="rowTop">
+            <div class="dealName"><b>Richmond Draft</b><span>Off-market brick ranch • Rehab candidate</span></div>
+            <span class="stage draft">Underwriting draft</span>
+          </div>
+          <div class="caseMeta"><span>Comps staged</span><span>Needs ARV review</span></div>
+          <div class="workflow">
+            <div class="work"><label>Next best step</label><b>Finish ARV / comp review</b><span>Comps are staged but not applied.</span></div>
+            <div class="work"><label>Who is next</label><b>Operator</b><span>Use Analyze drawer, then save.</span></div>
+          </div>
+        </button>
+
+        <button class="dealRow" data-section="draft" data-status="blocked" data-title="Columbus Land Draft" data-action="Stage subject and analyze land certainty" data-detail="Land logic has not been run yet. Start with Acquire, then move into Analyze if it survives." data-drawer="acquire">
+          <div class="rowTop">
+            <div class="dealName"><b>Columbus Land Draft</b><span>Parcel opportunity • Needs certainty scoring</span></div>
+            <span class="stage blocked">Needs intake</span>
+          </div>
+          <div class="caseMeta"><span class="blocked">Blocked</span><span>Needs source intake</span></div>
+          <div class="workflow">
+            <div class="work"><label>Next best step</label><b>Stage subject and analyze</b><span>Land logic has not been run yet.</span></div>
+            <div class="work"><label>Who is next</label><b>Operator</b><span>Acquire drawer should intake source.</span></div>
+          </div>
+        </button>
+
+        <div class="emptyState" id="emptyState"><b>No deals in this view.</b><p>Use Queue or Saved to return to active work.</p></div>
+      </div>
+    </section>
+
+    <nav class="dock" aria-label="Command dock">
+      <button data-abbr="AC" data-open="acquire">Acquire<small>intake</small></button>
+      <button data-abbr="AN" data-open="analyze">Analyze<small>comps</small></button>
+      <button data-abbr="EX" class="main" data-open="execute">Execute<small>package</small></button>
+      <button data-abbr="DC" data-open="documents">Docs<small>files</small></button>
+      <button data-abbr="ST" data-open="studio">Studio<small>mapper</small></button>
+    </nav>
+  </main>
+
+  <div class="backdrop" id="backdrop"></div>
+
+  <aside class="drawer top" id="drawer-stats">
+<div class="dh"><div><span class="drawerKicker">Desk intelligence</span><div class="drawerTitleRow"><h3>Deal Stats</h3><span class="drawerStatus ready">Synced</span></div><p>Quick operating totals for the current Deal Desk without pulling the user away from active execution.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Stats purpose</label><b>Keep the operator oriented.</b><span>Use this as the quick read on queue pressure, document readiness, and active execution load.</span></div>
+      <div class="statsGrid">
+        <div class="sheetStat"><label>Active</label><b>2</b></div><div class="sheetStat"><label>Drafts</label><b>2</b></div><div class="sheetStat"><label>Await Sign</label><b>1</b></div>
+        <div class="sheetStat"><label>Ready</label><b>1</b></div><div class="sheetStat"><label>Generated</label><b>8</b></div><div class="sheetStat"><label>Approved</label><b>5</b></div>
+      </div>
+      <div class="drawerFoot"><b>Next build:</b> wire these totals to real saved deals, field status, files, packages, and signature stages.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-acquire">
+<div class="dh"><div><span class="drawerKicker">Acquisition room</span><div class="drawerTitleRow"><h3>Acquire</h3><span class="drawerStatus neutral">Mount ready</span></div><p>Start, load, update, and preserve deal records before underwriting or document work begins.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Bring a deal into the desk.</b><span>Intake, saved deals, and update controls will mount here without changing the home screen.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Role</label><b>Intake</b></div><div class="roomStat"><label>State</label><b>Draft-safe</b></div><div class="roomStat"><label>Next</label><b>Analyze</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="ready"><b>Subject Intake</b><p>Listing URL, raw paste, stage subject, stage + analyze.</p><small>Entry</small></div>
+        <div class="mount" data-state="ready"><b>Saved Deals</b><p>Search, load, duplicate, archive, and reopen work.</p><small>Queue source</small></div>
+        <div class="mount" data-state="neutral"><b>Analyze Deal</b><p>Run or rerun the active underwriting engine after intake.</p><small>Bridge</small></div>
+        <div class="mount" data-state="waiting"><b>Save / Update</b><p>Persist active deal changes without leaving the Deal Desk.</p><small>Persistence</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> Acquire should create or load the active deal context. It should not feel like a separate app.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-analyze">
+<div class="dh"><div><span class="drawerKicker">Underwriting room</span><div class="drawerTitleRow"><h3>Analyze</h3><span class="drawerStatus neutral">Mount ready</span></div><p>Comps, ARV, strategy, land logic, and risk context live behind this drawer.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Prove or kill the deal.</b><span>Analysis should update confidence, strategy, margin, and the Deal Desk's Next Best Action.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Role</label><b>Decision</b></div><div class="roomStat"><label>Feeds</label><b>Desk</b></div><div class="roomStat"><label>Next</label><b>Docs</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="ready"><b>Comps</b><p>Comp assistant, queue, live comps, ARV guardrails.</p><small>Evidence</small></div>
+        <div class="mount" data-state="ready"><b>Strategy</b><p>Investor factor, rent support, ceilings, risk tiers.</p><small>Fit</small></div>
+        <div class="mount" data-state="neutral"><b>Land Logic</b><p>Land constraints, certainty, and proof-ledger support.</p><small>Land mode</small></div>
+        <div class="mount" data-state="waiting"><b>Overview Diagnostics</b><p>Decision notes, rehab reality, assignability, and summary.</p><small>Readout</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> analysis should never bury the decision. It should feed the Deal Desk status and next step.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-documents">
+<div class="dh"><div><span class="drawerKicker">Document room</span><div class="drawerTitleRow"><h3>Documents</h3><span class="drawerStatus waiting">Inputs pending</span></div><p>Fields, templates, generated files, and mapper access route through this room.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Resolve blockers before clean documents.</b><span>Documents should tell the user what is ready, what is missing, and what can be safely generated.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Fields</label><b>7/19</b></div><div class="roomStat"><label>Files</label><b>3 ready</b></div><div class="roomStat"><label>Blocked</label><b>1</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="waiting"><b>Fields</b><p>Field completion command center and blocker resolution.</p><small>Inputs</small></div>
+        <div class="mount" data-state="neutral"><b>Templates</b><p>Select seller, investor, title, and internal templates.</p><small>Selection</small></div>
+        <div class="mount" data-state="ready"><b>Files</b><p>Proofs, PDFs, approvals, rename, and file ledger.</p><small>Outputs</small></div>
+        <div class="mount" data-state="ready"><b>Mapper</b><p>Contract Mapper Studio entry point for custom contracts.</p><small>Studio link</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> generated documents should be blocked only by true blockers, not intentional recipient-later blanks.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-execute">
+<div class="dh"><div><span class="drawerKicker">Execution room</span><div class="drawerTitleRow"><h3>Execute</h3><span class="drawerStatus waiting">Seller pending</span></div><p>Package assembly, routing order, and distribution prep live here once files are approved.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Move the active deal forward.</b><span>Stage seller, investor, title, and internal packets in the correct sequence before release.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Seller</label><b>80%</b></div><div class="roomStat"><label>Investor</label><b>Ready</b></div><div class="roomStat"><label>Route</label><b>Seller</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="waiting"><b>Seller Packet</b><p>Purchase agreement, seller info, access authorization.</p><small>First route</small></div>
+        <div class="mount" data-state="ready"><b>Investor Packet</b><p>Assignment, NDA, investor intake, and deal packet.</p><small>Second route</small></div>
+        <div class="mount" data-state="neutral"><b>Title Packet</b><p>Title and closing documents staged for release.</p><small>Closing</small></div>
+        <div class="mount" data-state="blocked"><b>Distribution</b><p>Future recipient routing, review, and signature workflow.</p><small>Backend later</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> execution should respect sequence. Seller packet first, then investor/title routing when ready.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-studio">
+<div class="dh"><div><span class="drawerKicker">Control studio</span><div class="drawerTitleRow"><h3>Studio</h3><span class="drawerStatus neutral">Setup</span></div><p>Mapper, signatures, template management, and user-owned setup tools live here.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Prepare the system, not the deal.</b><span>Studio tools should configure the machine so future deals move faster.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Role</label><b>Setup</b></div><div class="roomStat"><label>Scope</label><b>Global</b></div><div class="roomStat"><label>Risk</label><b>Low</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="ready"><b>Contract Mapper Studio</b><p>Custom PDF mapping and token placement.</p><small>Mapper</small></div>
+        <div class="mount" data-state="neutral"><b>Signature Vault</b><p>Personal signature and initials asset storage.</p><small>Identity</small></div>
+        <div class="mount" data-state="ready"><b>Template Library</b><p>Default and custom contract management.</p><small>Library</small></div>
+        <div class="mount" data-state="waiting"><b>Default Identity</b><p>Buyer entity/name and user-owned defaults.</p><small>Profile</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> Studio should feel separate from deal execution while still feeding documents cleanly.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-saved">
+<div class="dh"><div><span class="drawerKicker">Saved work</span><div class="drawerTitleRow"><h3>Saved Deals</h3><span class="drawerStatus ready">Queue source</span></div><p>Saved work, active queue, draft queue, completed deals, and archive access live here.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Load the right deal into the desk.</b><span>Saved deals should feed the home queue without making users hunt through old panels.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Active</label><b>2</b></div><div class="roomStat"><label>Drafts</label><b>2</b></div><div class="roomStat"><label>Ready</label><b>1</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="ready"><b>Active Queue</b><p>Deals currently moving through execution.</p><small>Live</small></div>
+        <div class="mount" data-state="waiting"><b>Draft Queue</b><p>Partially built deals not ready for documents.</p><small>Drafts</small></div>
+        <div class="mount" data-state="neutral"><b>Archive</b><p>Completed, killed, paused, or cold opportunities.</p><small>History</small></div>
+        <div class="mount" data-state="ready"><b>Duplicate / Edit Meta</b><p>Rename, tag, duplicate, or clean up saved work.</p><small>Manage</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> saved deals should be the database door, not a detached file cabinet.</div>
+    </div>
+  </aside>
+
+  <aside class="drawer bottom" id="drawer-tools">
+<div class="dh"><div><span class="drawerKicker">System tools</span><div class="drawerTitleRow"><h3>Tools</h3><span class="drawerStatus neutral">Support</span></div><p>Utility access, settings, PDF brief controls, ledger, and QA support tools live here.</p></div><button class="close">×</button></div>
+    <div class="db">
+      <div class="drawerDirective"><label>Primary lane</label><b>Support the platform without cluttering the desk.</b><span>Tools should remain available but secondary to the live Deal Desk workflow.</span></div>
+      <div class="roomStats"><div class="roomStat"><label>Role</label><b>Utility</b></div><div class="roomStat"><label>Scope</label><b>System</b></div><div class="roomStat"><label>Next</label><b>QA</b></div></div>
+      <div class="roomLabel">Work zones</div>
+      <div class="mountGrid">
+        <div class="mount" data-state="neutral"><b>Settings</b><p>Main settings, defaults, and app preferences.</p><small>Config</small></div>
+        <div class="mount" data-state="ready"><b>PDF Brief</b><p>Investor-grade brief generation and summary outputs.</p><small>Brief</small></div>
+        <div class="mount" data-state="waiting"><b>Ledger</b><p>Deal history, document ledger, and future CPA-ready export.</p><small>History</small></div>
+        <div class="mount" data-state="blocked"><b>System QA</b><p>Future mapper/proof/PDF validation tools.</p><small>Later</small></div>
+      </div>
+      <div class="drawerFoot"><b>Operating note:</b> utilities should strengthen the platform without turning the home screen back into a cockpit.</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  const app=document.getElementById('app');
+  const backdrop=document.getElementById('backdrop');
+  const drawers=[...document.querySelectorAll('.drawer')];
+  const nextTitle=document.getElementById('nextTitle');
+  const nextDetail=document.getElementById('nextDetail');
+  const primaryAction=document.getElementById('primaryAction');
+  const rows=[...document.querySelectorAll('.dealRow')];
+  const sectionLabels=[...document.querySelectorAll('.sectionLabel')];
+  const emptyState=document.getElementById('emptyState');
+  const dockButtons=[...document.querySelectorAll('.dock button[data-open]')];
+  const outlookTitle=document.getElementById('outlookTitle');
+  const outlookMeta=document.getElementById('outlookMeta');
+  const outlookTiles=[document.getElementById('outlookTile1'),document.getElementById('outlookTile2'),document.getElementById('outlookTile3')];
+  const outlookLabels=[document.getElementById('outlook1Label'),document.getElementById('outlook2Label'),document.getElementById('outlook3Label')];
+  const outlookTitles=[document.getElementById('outlook1Title'),document.getElementById('outlook2Title'),document.getElementById('outlook3Title')];
+  const outlookDetails=[document.getElementById('outlook1Detail'),document.getElementById('outlook2Detail'),document.getElementById('outlook3Detail')];
+  let selectedDrawer='execute';
+
+  const outlookData={
+    queue:{
+      title:'Queue Outlook',
+      meta:'live signals',
+      tiles:[
+        ['ready','Next up','Norfolk investor review','Ready to route'],
+        ['waiting','Waiting','Cleveland seller packet','2 days pending'],
+        ['blocked','Blocked','Columbus intake','Needs source certainty']
+      ]
+    },
+    drafts:{
+      title:'Draft Outlook',
+      meta:'underwriting path',
+      tiles:[
+        ['waiting','Highest priority','Richmond ARV review','Comps staged'],
+        ['blocked','Blocker','Columbus intake','Land source missing'],
+        ['neutral','Next save','Promote survivors','Save after analysis']
+      ]
+    },
+    ready:{
+      title:'Ready Outlook',
+      meta:'route-ready',
+      tiles:[
+        ['ready','Ready packet','Norfolk 23503','Investor review'],
+        ['ready','Files','5 approved','Brief draft'],
+        ['neutral','Route','Investor','Open Execute']
+      ]
+    }
+  };
+
+  function updateOutlook(filter){
+    const data=outlookData[filter]||outlookData.queue;
+    outlookTitle.textContent=data.title;
+    outlookMeta.textContent=data.meta;
+    data.tiles.forEach((tile,index)=>{
+      const [state,label,title,detail]=tile;
+      outlookTiles[index].className='outlookTile '+state;
+      outlookLabels[index].textContent=label;
+      outlookTitles[index].textContent=title;
+      outlookDetails[index].textContent=detail;
+    });
+    const activeLabel=document.querySelector('.sectionLabel[data-section="active"]');
+    const draftLabel=document.querySelector('.sectionLabel[data-section="draft"]');
+    if(activeLabel) activeLabel.textContent=filter==='ready'?'Ready Queue':'Active Queue';
+    if(draftLabel) draftLabel.textContent='Draft Queue';
+  }
+
+  function setDockActive(name){
+    const hasMatch=dockButtons.some(btn=>btn.dataset.open===name);
+    if(!hasMatch) return;
+    dockButtons.forEach(btn=>btn.classList.toggle('main',btn.dataset.open===name));
+  }
+
+  function closeAll(){
+    drawers.forEach(d=>d.classList.remove('open'));
+    backdrop.classList.remove('open');
+    app.classList.remove('drawer-open');
+  }
+
+  function openDrawer(name){
+    closeAll();
+    const drawer=document.getElementById('drawer-'+name);
+    if(!drawer) return;
+    setDockActive(name);
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    app.classList.add('drawer-open');
+  }
+
+  function selectRow(row){
+    if(!row || row.classList.contains('hidden')) return;
+    rows.forEach(r=>r.classList.remove('selected'));
+    row.classList.add('selected');
+    selectedDrawer=row.dataset.drawer||'execute';
+    nextTitle.textContent=(row.dataset.title||'Selected deal')+' · '+(row.dataset.action||'Review next action');
+    nextDetail.textContent=row.dataset.detail||'Open the recommended workspace to continue.';
+    primaryAction.textContent='Open '+selectedDrawer.charAt(0).toUpperCase()+selectedDrawer.slice(1);
+    setDockActive(selectedDrawer);
+  }
+
+  function applyFilter(filter){
+    updateOutlook(filter);
+    let any=false;
+    rows.forEach(row=>{
+      const show=filter==='queue' || (filter==='drafts'&&row.dataset.section==='draft') || (filter==='ready'&&row.dataset.status==='ready');
+      row.classList.toggle('hidden',!show);
+      if(show) any=true;
+    });
+
+    sectionLabels.forEach(label=>{
+      const section=label.dataset.section;
+      const hasVisible=rows.some(row=>!row.classList.contains('hidden') && row.dataset.section===section);
+      label.classList.toggle('hidden',!hasVisible);
+    });
+
+    emptyState.classList.toggle('show',!any);
+
+    const selected=document.querySelector('.dealRow.selected');
+    if(!selected || selected.classList.contains('hidden')){
+      selectRow(rows.find(row=>!row.classList.contains('hidden')));
+    }
+  }
+
+  document.querySelectorAll('[data-open]').forEach(btn=>{
+    btn.addEventListener('click',()=>openDrawer(btn.dataset.open));
+  });
+
+  document.querySelectorAll('.close').forEach(btn=>btn.addEventListener('click',closeAll));
+  backdrop.addEventListener('click',closeAll);
+  document.addEventListener('keydown',event=>{ if(event.key==='Escape') closeAll(); });
+
+  document.querySelectorAll('.mode button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.mode button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  rows.forEach(row=>row.addEventListener('click',()=>selectRow(row)));
+
+  primaryAction.addEventListener('click',()=>openDrawer(selectedDrawer));
+
+  document.querySelectorAll('.filter').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  updateOutlook('queue');
+  setDockActive(selectedDrawer);
+})();
+</script>
+</body>
+</html>
